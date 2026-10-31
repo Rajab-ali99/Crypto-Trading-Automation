@@ -1,0 +1,103 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+}
+
+model User {
+  id String @id @default(cuid())
+
+  name         String?
+  email        String  @unique
+  passwordHash String
+
+  emailVerified   Boolean   @default(false)
+  emailVerifiedAt DateTime?
+
+  role   UserRole   @default(USER)
+  status UserStatus @default(ACTIVE)
+  plan   UserPlan   @default(FREE)
+
+  trialStartedAt DateTime?
+  trialEndsAt    DateTime?
+
+  timezone String @default("UTC")
+  currency String @default("USD")
+
+  twoFactorEnabled Boolean @default(false)
+
+  lastLoginAt      DateTime?
+  exchangeAccounts ExchangeAccount[]
+  createdAt        DateTime          @default(now())
+  updatedAt        DateTime          @updatedAt
+
+  @@index([status])
+  @@index([plan])
+}
+
+model Otp {
+  id String @id @default(cuid())
+
+  email     String
+  otp       String
+  expiresAt DateTime
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([email])
+  @@index([expiresAt])
+}
+
+enum UserRole {
+  USER
+  ADMIN
+}
+
+enum UserStatus {
+  ACTIVE
+  SUSPENDED
+  BANNED
+}
+
+enum UserPlan {
+  FREE
+  PRO
+}
+
+model ExchangeAccount {
+  id String @id @default(cuid())
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  exchange Exchange
+
+  apiKeyEncrypted    String @db.Text
+  apiSecretEncrypted String @db.Text
+
+  status ExchangeAccountStatus @default(CONNECTED)
+
+  isTestnet Boolean @default(true)
+
+  lastConnectedAt DateTime?
+  lastError       String?   @db.Text
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([userId, exchange, isTestnet])
+  @@index([userId])
+}
+
+enum Exchange {
+  BINANCE
+}
+
+enum ExchangeAccountStatus {
+  CONNECTED
+  DISCONNECTED
+  ERROR
+}
