@@ -1,17 +1,14 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, Suspense } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from 'zod';
-// import { useDispatch } from "react-redux";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 
 // Project specific imports
 import { zSchema } from "@/lib/zodSchema";
-// import { login } from "@/store/slices/authSlice";
-// import api from "@/lib/axios";
 import { toast } from "react-toastify";
 import {  WEBSITE_DASHBOARD, WEBSITE_FORGOTPASSWORD, WEBSITE_Register } from "@/routes/WebsiteRoutes";
 
@@ -35,11 +32,8 @@ import { BsLightningChargeFill } from 'react-icons/bs';
 import { FiMail, FiLock } from 'react-icons/fi';
 import axios from 'axios';
 
-export default function LoginPage() {
-    // const dispatch = useDispatch();
+function LoginPageContent() {
     const router = useRouter();
-    const searchParams = useSearchParams();
-
 
     // State
     const [otpEmail, setotpEmail] = useState('');
@@ -286,5 +280,13 @@ export default function LoginPage() {
                 </AnimatePresence>
             </motion.div>
         </div>
+    );
+}
+
+export default function LoginPage() {
+    return (
+        <Suspense fallback={<div className="min-h-screen" />}>
+            <LoginPageContent />
+        </Suspense>
     );
 }

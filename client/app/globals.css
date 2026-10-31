@@ -3,14 +3,14 @@
 @tailwind components;
 @tailwind utilities;
 
-/*
-  Palette pulled from the Bullish Pixel logo: saturated neon green, near-
-  black, and chrome white — no secondary accent hue. "signal" (used for
-  primary buttons/focus rings) intentionally matches "bull" (used for
-  positive data) so the whole UI reads as one consistent brand color, the
-  way the logo itself is essentially monochrome. "bear" stays red — that's
-  a semantic color for losses, not a brand choice, so it's kept distinct.
-*/
+
+:root {
+  --font-display: "Trebuchet MS", sans-serif;
+  --font-body: Arial, sans-serif;
+  --font-mono: "Courier New", monospace;
+}
+
+
 :root {
   --bg: 248 250 248;
   --surface: 255 255 255;
