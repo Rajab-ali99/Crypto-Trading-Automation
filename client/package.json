@@ -1,4 +1,7 @@
 {
+  "engines": {
+  "node": "20.x"
+},
   "name": "bullish-pixel",
   "version": "1.0.0",
   "private": true,
