@@ -54,13 +54,22 @@ export const verifyOtp = asyncHandler(async (req, res) => {
   const { token, user } =
     await authService.verifyOtp(req.body);
 
-  res.cookie("Token_Access", token, {
-    httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
-    sameSite: "lax",
-    path: "/",
-    maxAge: 30 * 24 * 60 * 60 * 1000,
-  });
+   const isProduction = process.env.NODE_ENV === "production";
+
+    const cookieOptions = {
+      httpOnly: true,
+      secure: isProduction,
+      sameSite: isProduction ? "none" : "lax",
+      path: "/",
+      ...(isProduction && {
+        domain: ".bullishpixel.pk",
+      }),
+    };
+
+    res.cookie("Token_Access", token, {
+      ...cookieOptions,
+      maxAge: 30 * 24 * 60 * 60 * 1000,
+    });
 
   res.status(200).json({
     success: true,
