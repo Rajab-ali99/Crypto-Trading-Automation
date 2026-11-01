@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useCurrentUser } from '@/lib/hooks/useCurrentUser';
 import { useLogout } from "@/lib/hooks/useLogout";
+import { FiX } from 'react-icons/fi';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useTheme } from 'next-themes';
@@ -53,7 +54,7 @@ export default function DashboardLayout({ children }) {
   if (isLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <Loading/>
+        <Loading />
       </div>
     );
   }
@@ -68,20 +69,35 @@ export default function DashboardLayout({ children }) {
     <div className="h-screen bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 flex transition-colors duration-300">
 
       {/* Sidebar */}
-      <aside className={`fixed inset-y-0 left-0 z-50 w-64 bg-white dark:bg-slate-900 border-r border-slate-200 dark:border-slate-800 transform transition-transform duration-300 ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'} md:relative md:translate-x-0`}>
-        <div className="flex items-center justify-center h-20 border-b border-slate-200 dark:border-slate-800">
-          {/* Replace with your actual Logo component later */}
+      {/* Sidebar */}
+      <aside
+        className={`fixed inset-y-0 left-0 z-50 w-64 bg-white dark:bg-slate-900 border-r border-slate-200 dark:border-slate-800 transform transition-transform duration-300 ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'
+          } md:relative md:translate-x-0`}
+      >
+        <div className="flex items-center justify-between h-20 px-4 border-b border-slate-200 dark:border-slate-800">
           <h1 className="text-2xl font-bold tracking-tight">
             Bullish<span className="text-green-600">Pixel</span>
           </h1>
+
+          {/* Close button: mobile only */}
+          <button
+            onClick={() => setSidebarOpen(false)}
+            className="md:hidden p-2 rounded-md hover:bg-slate-100 dark:hover:bg-slate-800"
+            aria-label="Close sidebar"
+          >
+            <FiX className="text-xl" />
+          </button>
         </div>
+
         <nav className="p-4 space-y-2">
           {navItems.map((item) => (
-            <Link key={item.name} href={item.path}>
-              <div className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-200 cursor-pointer ${pathname === item.path
-                ? 'bg-green-50 dark:bg-green-900/20 text-green-600 dark:text-green-400 font-medium'
-                : 'hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-400'
-                }`}>
+            <Link  onClick={() => setSidebarOpen(!sidebarOpen)} key={item.name} href={item.path}>
+              <div
+                className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-200 cursor-pointer ${pathname === item.path
+                    ? 'bg-green-50 dark:bg-green-900/20 text-green-600 dark:text-green-400 font-medium'
+                    : 'hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-400'
+                  }`}
+              >
                 {item.icon}
                 <span>{item.name}</span>
               </div>
