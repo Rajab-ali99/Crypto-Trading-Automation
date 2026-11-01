@@ -1,28 +1,39 @@
+import { Resend } from "resend";
 
-import nodemailer from 'nodemailer';
-
-const transporter = nodemailer.createTransport({
-    host: process.env.NODEMAILER_HOST,
-    port: Number(process.env.NODEMAILER_PORT),
-    secure: false,
-    auth: {
-        user: process.env.NODEMAILER_EMAIL,
-        pass: process.env.NODEMAILER_PASSWORD
-    }
-})
+const resend = new Resend(process.env.RESEND_API_KEY);
 
 export async function sendMail(receiver, subject, text) {
     try {
-        const options = {
-            from: `'Bulish Pixel' <${process.env.NODEMAILER_EMAIL}>`,
+        const { data, error } = await resend.emails.send({
+            from: process.env.RESEND_FROM_EMAIL,
             to: receiver,
-            subject: subject,
-            html: text
+            subject,
+            html: text,
+        });
+
+        if (error) {
+            console.error("Resend error:", error);
+
+            return {
+                success: false,
+                message: error.message || "Failed to send email.",
+            };
         }
-        await transporter.sendMail(options);
-        return { success: true, message: "Email sent successfully." }
+
+        console.log("Email sent successfully:", data);
+
+        return {
+            success: true,
+            message: "Email sent successfully.",
+        };
+
     } catch (error) {
-        return { success: false, message: error.message }
+        console.error("Resend error:", error);
+
+        return {
+            success: false,
+            message: error.message || "Failed to send email.",
+        };
     }
 }
 
