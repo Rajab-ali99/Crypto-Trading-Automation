@@ -93,7 +93,7 @@ function LoginPageContent() {
 
             toast.success(message);
             setotpEmail("");
-            router.push(WEBSITE_DASHBOARD)
+            window.location.href = WEBSITE_DASHBOARD;
 
         } catch (error) {
             toast.error(error?.response?.data?.message || "Something went wrong");
